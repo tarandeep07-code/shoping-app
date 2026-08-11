@@ -33,7 +33,7 @@ export default function ProductList() {
   }, []);
 
   if (loading) {
-    return <p>Loading products...</p>;
+    return <p></p>;
   }
 
   return (
