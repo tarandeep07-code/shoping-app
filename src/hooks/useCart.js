@@ -30,7 +30,7 @@ export function useCart() {
             console.error('Cart DB sync failed:', error);
         }
     };
-
+ 
     // ── Add to cart → Zustand + DB ──
     const add = (product) => {
         addToCart(product);

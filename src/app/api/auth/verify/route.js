@@ -46,7 +46,7 @@ export async function GET(req) {
         const normalizedEmail = email.trim().toLowerCase();
         await dbConnect();
         let user = await User.findOne({ email: normalizedEmail });
-          let isNewUser = false; // ← track if new or existing
+        let isNewUser = false; // ← track if new or existing
 
         if (!user) {
             user = await User.create({
@@ -54,12 +54,12 @@ export async function GET(req) {
                 name: decoded.name || "",
                 emailVerified: true,
             });
-             isNewUser = true; // ← guest cart will be saved to DB
+            isNewUser = true; // ← guest cart will be saved to DB
         } else {
             // Existing user
             user.emailVerified = true;
             await user.save();
-             isNewUser = false; // ← guest cart will be saved to DB
+            isNewUser = false; // ← guest cart will be saved to DB
         }
         const sessionToken = jwt.sign(
             {

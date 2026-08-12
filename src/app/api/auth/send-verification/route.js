@@ -32,7 +32,7 @@ export async function POST(req) {
         const response = await client.transactionalEmails.sendTransacEmail({
             sender: {
                 email: process.env.BREVO_SENDER_EMAIL,
-                name:  process.env.BREVO_SENDER_NAME,
+                name: process.env.BREVO_SENDER_NAME,
             },
             to: [{ email }],
             subject: 'Your sign-in link',
@@ -54,13 +54,13 @@ export async function POST(req) {
                 </div>
             `,
             textContent: `
-Sign in to Your App
+                Sign in to Your App
 
-Click the link below to sign in. This link expires in 5 minutes.
+                Click the link below to sign in. This link expires in 5 minutes.
 
-${verifyLink}
+                ${verifyLink}   
 
-If you didn't request this, ignore this email.
+                If you didn't request this, ignore this email.
             `,
         });
 

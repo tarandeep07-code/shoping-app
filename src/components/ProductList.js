@@ -37,7 +37,7 @@ export default function ProductList() {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-4 gap-4">
       {products.map((product) => (
         <div
           key={product._id}
@@ -53,7 +53,7 @@ export default function ProductList() {
 
           <button
             onClick={() => add({
-              id: product._id,    // ← map _id to id
+              id: product._id,  
               name: product.name,
               price: product.price,
               image: product.image || '',
