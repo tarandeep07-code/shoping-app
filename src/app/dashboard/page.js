@@ -2,11 +2,17 @@
 
 import React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {ShoppingBag,ShoppingCart,Package,DollarSign,User,ArrowRight,Clock,CheckCircle} from "lucide-react";
 import useAuthStore from "@/store/authStore";
 
 export default function Page() {
     const { user } = useAuthStore();
+
+    // User doesn't exist anymore
+    if (!user) {
+        redirect("/login");
+    }
 
     // Static data for now
     const stats = [
