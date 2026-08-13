@@ -6,46 +6,37 @@ import useCartStore from '@/store/cartStore';
 
 export default function AuthProvider({ children }) {
 
-    const { login, logout } = useAuthStore();
-    const { cart, setCart } = useCartStore();
+    const { login, logout, setLoading } = useAuthStore();
+    const { cart, setCart }             = useCartStore();
 
     useEffect(() => {
         const checkSession = async () => {
             try {
-                // ── 1. Wait for Zustand to rehydrate from localStorage ──
-                await useCartStore.persist.rehydrate();
+                setLoading(true); // ← mark as loading
 
-                // ── 2. Read cart AFTER rehydration ──
-                const rehydratedCart = useCartStore.getState().cart;
-
-                // ── 3. Check session ──
                 const res  = await fetch('/api/auth/me');
                 const data = await res.json();
 
                 if (!res.ok || !data.user) {
-                    logout();
+                    logout(); // sets isLoading: false inside
                     return;
                 }
 
-                login(data.user);
+                login(data.user); // sets isLoading: false inside
 
-                // ── 4. Sync cart using rehydrated cart ──
+                // Cart sync
                 if (data.user.isNewUser) {
-                    // New user → save guest cart (from localStorage) to DB
                     await fetch('/api/cart/sync', {
                         method:  'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body:    JSON.stringify({ cart: rehydratedCart }),
+                        body:    JSON.stringify({ cart }),
                     });
-                    // Zustand already has correct cart
-
                 } else {
-                    // Existing user → fetch DB cart, replace Zustand
                     const cartRes  = await fetch('/api/cart');
                     const cartData = await cartRes.json();
                     if (cartRes.ok) setCart(cartData.cart);
                 }
-                
+
             } catch (error) {
                 console.error('AuthProvider error:', error);
                 logout();
