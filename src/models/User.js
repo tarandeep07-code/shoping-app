@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    role: {
+      type: String,
+      required: true,
+    },
 
     emailVerified: {
       type: Boolean,

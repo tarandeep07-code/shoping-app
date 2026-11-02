@@ -3,6 +3,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+const CART_STORAGE_KEY = "shopping-cart";
+
 const useCartStore = create(
     persist(
         (set, get) => ({
@@ -100,5 +102,49 @@ const useCartStore = create(
         }
     )
 );
+if (typeof window !== "undefined") {
+    window.addEventListener("storage", (event) => {
+        if (event.key !== CART_STORAGE_KEY) {
+            return;
+        }
 
+        try {
+            // Handle localStorage removal
+            if (!event.newValue) {
+                if (useCartStore.getState().cart.length > 0) {
+                    useCartStore.setState({
+                        cart: [],
+                    });
+                }
+
+                return;
+            }
+
+            const parsedData = JSON.parse(event.newValue);
+
+            const updatedCart = parsedData?.state?.cart;
+
+            if (!Array.isArray(updatedCart)) {
+                return;
+            }
+
+            const currentCart = useCartStore.getState().cart;
+
+            // Update only if cart actually changed
+            if (
+                JSON.stringify(currentCart) !==
+                JSON.stringify(updatedCart)
+            ) {
+                useCartStore.setState({
+                    cart: updatedCart,
+                });
+            }
+        } catch (error) {
+            console.error(
+                "Cart synchronization error:",
+                error
+            );
+        }
+    });
+}
 export default useCartStore;

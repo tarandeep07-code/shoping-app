@@ -36,8 +36,10 @@ export async function GET(req) {
         }
 
         const email = decoded.email;
+        const role = decoded.role;
+        console.log("Decoded:", decoded);
 
-        if (!email) {
+        if (!email || !role) {
             return NextResponse.redirect(
                 new URL("/login?error=invalid_token", req.url)
             );
@@ -52,19 +54,23 @@ export async function GET(req) {
             user = await User.create({
                 email: normalizedEmail,
                 name: decoded.name || "",
+                role: role || "",
                 emailVerified: true,
             });
             isNewUser = true; // ← guest cart will be saved to DB
+            console.log("Created user:", user);
         } else {
             // Existing user
             user.emailVerified = true;
             await user.save();
             isNewUser = false; // ← guest cart will be saved to DB
+            console.log("Created user:", user);
         }
         const sessionToken = jwt.sign(
             {
                 userId: user._id.toString(),
                 email: user.email,
+                role: user.role,
                 isNewUser,
                 type: "session",
             },

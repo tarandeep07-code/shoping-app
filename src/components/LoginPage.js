@@ -15,6 +15,7 @@ export default function LoginPage() {
     const urlError = errorMap[params.get('error')] || '';
 
     const [email,   setEmail]   = useState('');
+    const [role,   setRole]   = useState("customer");
     const [message, setMessage] = useState(urlError);
     const [isError, setIsError] = useState(!!urlError);
     const [loading, setLoading] = useState(false);
@@ -24,11 +25,12 @@ export default function LoginPage() {
         e.preventDefault();
         setLoading(true);
         setMessage('');
+        console.log("Sending:", { email, role });
 
         const res  = await fetch('/api/auth/send-verification', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ email }),
+            body:    JSON.stringify({ email,role }),
         });
         const data = await res.json();
 
@@ -69,8 +71,8 @@ export default function LoginPage() {
 
                 <h1 className="text-2xl font-semibold text-gray-900 mb-1">Welcome</h1>
                 <p className="text-sm text-gray-500 leading-relaxed mb-8">
-                    Enter your email and we'll send you a sign-in link.<br />
-                    No password needed — we'll create your account automatically.
+                    Enter your email and we will send you a sign-in link.<br />
+                    No password needed — we will create your account automatically.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">

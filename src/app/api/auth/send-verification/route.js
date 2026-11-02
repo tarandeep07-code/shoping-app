@@ -10,7 +10,9 @@ const client = new BrevoClient({
 
 export async function POST(req) {
 
-    const { email } = await req.json();
+    const { email,role } = await req.json();
+    console.log("Received email:", email);
+console.log("Received role:", role);
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return NextResponse.json(
@@ -21,10 +23,11 @@ export async function POST(req) {
 
     // Generate JWT token — expires in 5 minutes
     const token = jwt.sign(
-        { email, type: 'email_verification' },
+        { email,role, type: 'email_verification' },
         process.env.JWT_SECRET,
         { expiresIn: '5m' }
     );
+    console.log("Token role:", jwt.verify(token, process.env.JWT_SECRET).role);
 
     const verifyLink = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify?token=${token}`;
 

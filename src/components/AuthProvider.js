@@ -9,7 +9,7 @@ export default function AuthProvider({ children }) {
     const { login, logout, setLoading } = useAuthStore();
     const { cart, setCart }             = useCartStore();
 
-    useEffect(() => {
+    useEffect(() => { 
         const checkSession = async () => {
             try {
                 setLoading(true); // ← mark as loading
