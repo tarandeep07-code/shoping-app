@@ -20,9 +20,10 @@ export default function Cart() {
         finalTotal,
     } = useCart();
 
-    const { isCartOpen, closeCart } = useCartStore();
+    const isCartOpen = useCartStore((state) => state.isCartOpen);
+    const closeCart = useCartStore((state) => state.closeCart);
 
-    // Prevent background scrolling
+    // Prevent background scrolling while drawer is open
     useEffect(() => {
         if (!isCartOpen) return;
 
@@ -43,7 +44,7 @@ export default function Cart() {
 
     return (
         <>
-            {/* BACKDROP */}
+            {/* BACKDROP - CLOSE ON OUTSIDE CLICK */}
             <div
                 onClick={closeCart}
                 className={`fixed inset-0 z-[100] bg-black/50 transition-opacity duration-300 ${
@@ -53,7 +54,7 @@ export default function Cart() {
                 }`}
             />
 
-            {/* DRAWER */}
+            {/* CART DRAWER */}
             <aside
                 aria-hidden={!isCartOpen}
                 className={`fixed top-0 right-0 z-[101] h-dvh w-full max-w-[380px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
@@ -72,7 +73,9 @@ export default function Cart() {
                         </h2>
                     </div>
 
+                    {/* CLOSE ONLY ON CROSS CLICK */}
                     <button
+                        type="button"
                         onClick={closeCart}
                         className="p-2 rounded-full hover:bg-gray-100 transition"
                         aria-label="Close cart"
@@ -83,7 +86,6 @@ export default function Cart() {
 
                 {/* CART CONTENT */}
                 <div className="flex-1 overflow-y-auto p-5">
-
                     {cart.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-center">
                             <ShoppingCart
@@ -98,17 +100,9 @@ export default function Cart() {
                             <p className="text-gray-500 mt-2">
                                 Add some products to get started.
                             </p>
-
-                            <button
-                                onClick={closeCart}
-                                className="mt-6 bg-black text-white px-6 py-3 rounded-lg"
-                            >
-                                Continue Shopping
-                            </button>
                         </div>
                     ) : (
                         <div className="space-y-5">
-
                             {cart.map((item) => {
                                 const itemSubtotal =
                                     Number(item.price) * item.quantity;
@@ -146,6 +140,7 @@ export default function Cart() {
                                             </div>
 
                                             <button
+                                                type="button"
                                                 onClick={() => remove(item.id)}
                                                 className="text-red-500 hover:text-red-700 h-fit"
                                                 aria-label={`Remove ${item.name}`}
@@ -158,6 +153,7 @@ export default function Cart() {
                                         <div className="flex items-center gap-3 mt-4">
                                             <div className="flex items-center border rounded-lg">
                                                 <button
+                                                    type="button"
                                                     onClick={() => decrease(item.id)}
                                                     className="p-2 hover:bg-gray-100"
                                                     aria-label="Decrease quantity"
@@ -170,6 +166,7 @@ export default function Cart() {
                                                 </span>
 
                                                 <button
+                                                    type="button"
                                                     onClick={() => increase(item.id)}
                                                     className="p-2 hover:bg-gray-100"
                                                     aria-label="Increase quantity"
@@ -193,7 +190,6 @@ export default function Cart() {
                                     </div>
                                 );
                             })}
-
                         </div>
                     )}
                 </div>
@@ -201,31 +197,22 @@ export default function Cart() {
                 {/* FOOTER */}
                 {cart.length > 0 && (
                     <div className="border-t p-5 bg-white shadow-[0_-5px_15px_rgba(0,0,0,0.04)]">
-
                         <div className="space-y-3 text-sm">
                             <div className="flex justify-between">
                                 <span className="text-gray-500">
                                     Subtotal
                                 </span>
-                                <span>
-                                    ${subtotal.toFixed(2)}
-                                </span>
+                                <span>${subtotal.toFixed(2)}</span>
                             </div>
 
                             <div className="flex justify-between text-green-600">
-                                <span>
-                                    Total Discount
-                                </span>
-                                <span>
-                                    -${totalDiscount.toFixed(2)}
-                                </span>
+                                <span>Total Discount</span>
+                                <span>-${totalDiscount.toFixed(2)}</span>
                             </div>
 
                             <div className="flex justify-between text-lg font-bold border-t pt-3">
                                 <span>Total</span>
-                                <span>
-                                    ${finalTotal.toFixed(2)}
-                                </span>
+                                <span>${finalTotal.toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -238,6 +225,7 @@ export default function Cart() {
                         </Link>
 
                         <button
+                            type="button"
                             onClick={clear}
                             className="w-full text-sm text-red-500 mt-3 hover:underline"
                         >

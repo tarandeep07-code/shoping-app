@@ -88,8 +88,7 @@ const useCartStore = create(
 
             clearCart: () =>
                 set({
-                    cart: [],
-                    isCartOpen: true,
+                    cart: []
                 }),
 
             setCart: (cart) =>

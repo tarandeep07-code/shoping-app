@@ -64,6 +64,7 @@ export default function CheckoutPage() {
                 body: JSON.stringify({
                     customer: form,
                     items: cart,
+                    total: finalTotal,
                 }),
             });
 
@@ -87,9 +88,12 @@ export default function CheckoutPage() {
     };
 
     const formatPrice = (price) => {
-        return `$${Number(price).toFixed(2)}`;
+        return new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "usd",
+            maximumFractionDigits: 2,
+        }).format(Number(price) || 0);
     };
-
     // EMPTY CART
     if (cart.length === 0) {
         return (
