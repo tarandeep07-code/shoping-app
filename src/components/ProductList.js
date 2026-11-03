@@ -65,7 +65,7 @@ export default function ProductList() {
             key={product._id}
             className="border border-gray-300 p-4 rounded"
           >
-            <Link href={`/product/${product.id}`}>
+            <Link href={`/product/${product.id}`} prefetch={false}>
               <Image
                 src={product.image}
                 alt={product.name}
